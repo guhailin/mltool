@@ -16,7 +16,7 @@ def download_voc2012(IMG_WIDTH=224):
     return read_record(train_record_path, val_record_path)
 
 
-def downloadFILE(url, name):
+def downloadFILE(url):
     print(f'downloading {url}')
     name = url.split('/')[-1]
     resp = requests.get(url=url, stream=True)
