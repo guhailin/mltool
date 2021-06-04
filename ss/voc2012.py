@@ -7,7 +7,7 @@ from .record_util import _bytes_feature, _float_feature, _int64_feature
 import requests
 
 def download_voc2012(IMG_WIDTH=224):
-    download_voc2012('https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/semantic_contours/benchmark.tgz')
+    downloadFILE('https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/semantic_contours/benchmark.tgz')
     os.system("tar -zxf benchmark.tgz")
 
     path = 'benchmark_RELEASE/dataset/'
