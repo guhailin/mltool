@@ -7,8 +7,8 @@ from .record_util import _bytes_feature, _float_feature, _int64_feature
 import requests
 
 def download_voc2012(IMG_WIDTH=224):
-    downloadFILE('https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/semantic_contours/benchmark.tgz')
-    os.system("tar -zxf benchmark.tgz")
+    file = downloadFILE('https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/semantic_contours/benchmark.tgz')
+    os.system(f"tar -zxf {file}")
 
     path = 'benchmark_RELEASE/dataset/'
 
@@ -19,13 +19,21 @@ def download_voc2012(IMG_WIDTH=224):
 def downloadFILE(url):
     print(f'downloading {url}')
     name = url.split('/')[-1]
-    resp = requests.get(url=url, stream=True)
-    content_size=int(resp.headers['Content-Length'])/1024
-    with open(name, "wb") as f:
-        print("total size is:", content_size, 'k,start...')
-        for data in tqdm(iterable=resp.iter_content(1024), total=content_size, unit='k', desc=name):
-            f.write(data)
+
+    response = requests.get(url, stream=True)
+    total_size_in_bytes= int(response.headers.get('content-length', 0))
+    block_size = 1024
+    progress_bar = tqdm(total=total_size_in_bytes, unit='iB', unit_scale=True)
+    with open(name, 'wb') as file:
+        for data in response.iter_content(block_size):
+            progress_bar.update(len(data))
+            file.write(data)
+    progress_bar.close()
+    if total_size_in_bytes != 0 and progress_bar.n != total_size_in_bytes:
+        print("ERROR, something went wrong")
+    else:
         print(name + "download finished!")
+    return name
 
 
 def write_record(path, IMG_WIDTH):
