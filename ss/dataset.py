@@ -4,7 +4,7 @@ from tensorflow import keras
 import matplotlib.pyplot as plt
 from PIL import Image,ImageOps
 
-import voc2012 as voc
+from . import voc2012 as voc
 
 import os
 

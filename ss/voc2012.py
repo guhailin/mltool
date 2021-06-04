@@ -2,14 +2,13 @@ import numpy as np
 import tensorflow as tf
 from tqdm import tqdm
 import os
-from image_util import *
-from record_util import _bytes_feature,_float_feature,_int64_feature
+from .image_util import *
+from .record_util import _bytes_feature,_float_feature,_int64_feature
 
 
 def download_voc2012(IMG_WIDTH=224):
-    # os.system("wget https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/semantic_contours/benchmark.tgz")
-    # os.system("tar -zxf benchmark.tgz")
-    os.chdir("/Users/guhailin/Downloads")
+    os.system("wget https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/semantic_contours/benchmark.tgz")
+    os.system("tar -zxf benchmark.tgz")
 
     path = 'benchmark_RELEASE/dataset/'
 
