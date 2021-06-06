@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 def download_voc2012(IMG_WIDTH=224, download=True):
     if download:
-        file = downloadFILE('https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/semantic_contours/benchmark.tgz')
+        file = download_url('https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/semantic_contours/benchmark.tgz')
         os.system(f"tar -zxf {file}")
 
     path = 'benchmark_RELEASE/dataset/'
