@@ -1,14 +1,17 @@
 import numpy as np
 import tensorflow as tf
-from tqdm import tqdm
+
 import os
 from .image_util import *
 from .record_util import _bytes_feature, _float_feature, _int64_feature
-import requests
+import urllib.request
 
-def download_voc2012(IMG_WIDTH=224):
-    file = downloadFILE('https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/semantic_contours/benchmark.tgz')
-    os.system(f"tar -zxf {file}")
+from tqdm import tqdm
+
+def download_voc2012(IMG_WIDTH=224, download=True):
+    if download:
+        file = downloadFILE('https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/semantic_contours/benchmark.tgz')
+        os.system(f"tar -zxf {file}")
 
     path = 'benchmark_RELEASE/dataset/'
 
@@ -16,24 +19,19 @@ def download_voc2012(IMG_WIDTH=224):
     return read_record(train_record_path, val_record_path)
 
 
-def downloadFILE(url):
-    print(f'downloading {url}')
-    name = url.split('/')[-1]
+class DownloadProgressBar(tqdm):
+    def update_to(self, b=1, bsize=1, tsize=None):
+        if tsize is not None:
+            self.total = tsize
+        self.update(b * bsize - self.n)
 
-    response = requests.get(url, stream=True)
-    total_size_in_bytes= int(response.headers.get('content-length', 0))
-    block_size = 1024
-    progress_bar = tqdm(total=total_size_in_bytes, unit='iB', unit_scale=True)
-    with open(name, 'wb') as file:
-        for data in response.iter_content(block_size):
-            progress_bar.update(len(data))
-            file.write(data)
-    progress_bar.close()
-    if total_size_in_bytes != 0 and progress_bar.n != total_size_in_bytes:
-        print("ERROR, something went wrong")
-    else:
-        print(name + "download finished!")
-    return name
+
+def download_url(url):
+    name = url.split('/')[-1]
+    with DownloadProgressBar(unit='B', unit_scale=True,
+                             miniters=1, desc=url.split('/')[-1]) as t:
+        urllib.request.urlretrieve(url, filename=name, reporthook=t.update_to)
+
 
 
 def write_record(path, IMG_WIDTH):
