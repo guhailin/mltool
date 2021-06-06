@@ -31,6 +31,7 @@ def download_url(url):
     with DownloadProgressBar(unit='B', unit_scale=True,
                              miniters=1, desc=url.split('/')[-1]) as t:
         urllib.request.urlretrieve(url, filename=name, reporthook=t.update_to)
+    return name
 
 
 
